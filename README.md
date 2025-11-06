@@ -37,6 +37,12 @@ A Go tool to convert backup files between the Mihon and Kotatsu Android apps.
 
 - Go 1.20+
 
+> [!NOTE]
+> The following tools are optional and only required if you want to regenerate the Go protobuf bindings from the `.proto` files:
+>
+> - `protoc` (Protocol Buffers compiler)
+> - `protoc-gen-go` (Go plugin for `protoc`)
+
 ## Build
 
 The following commands work on PowerShell, Command Prompt, Bash, and other POSIX-like shells (replace paths as needed).
@@ -79,6 +85,9 @@ Or on Bash:
 GOOS=linux GOARCH=amd64 go build -o mk-bkconv-linux ./cmd/mk-bkconv
 ```
 
+> [!TIP]
+> Windows: use the included `compile.bat` for a quick iterative build loop — it runs `gofmt` and `go build` and pauses so you can inspect any output.
+
 ## Usage
 
 Two subcommands are available:
@@ -86,7 +95,14 @@ Two subcommands are available:
 - `mihon-to-kotatsu` — convert a Mihon `.tachibk` backup to a Kotatsu ZIP.
 - `kotatsu-to-mihon` — convert a Kotatsu ZIP backup to a Mihon `.tachibk` (basic mapping).
 
-Examples (PowerShell):
+> [!NOTE]
+> Protobuf generation:
+>
+> - The repository already includes generated Go protobuf bindings for Mihon's backup message at `proto/mihon/backup.pb.go`. The CLI uses these generated types by default.
+> - You do NOT need `protoc` to build or run this tool unless you want to regenerate the Go bindings from `proto/mihon/backup.proto`.
+> - To regenerate bindings, run the scripts in `proto/` (`proto/generate.sh` or `proto/generate.bat`). Those require `protoc` and `protoc-gen-go` to be installed.
+
+Example (PowerShell):
 
 ```powershell
 # Mihon -> Kotatsu

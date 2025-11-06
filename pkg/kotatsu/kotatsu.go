@@ -4,25 +4,47 @@ import (
 	"archive/zip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 )
 
 // Minimal Kotatsu models used for conversion
 type KotatsuBackup struct {
-	Favourites []KotatsuManga    `json:"favourites"`
-	Categories []KotatsuCategory `json:"categories"`
+	Favourites []KotatsuFavouriteEntry `json:"favourites"`
+	Categories []KotatsuCategory       `json:"categories"`
+	History    []KotatsuHistory        `json:"history"`
+	Bookmarks  []KotatsuBookmark       `json:"bookmarks"`
+	Index      []KotatsuIndexEntry     `json:"index"`
+	// Raw sections (for passthrough)
+	RawSettings   json.RawMessage `json:"-"`
+	RawReaderGrid json.RawMessage `json:"-"`
+	RawSources    json.RawMessage `json:"-"`
+}
+
+type KotatsuFavouriteEntry struct {
+	MangaId    int64        `json:"manga_id"`
+	CategoryId int64        `json:"category_id"`
+	SortKey    int          `json:"sort_key"`
+	Pinned     bool         `json:"pinned"`
+	CreatedAt  int64        `json:"created_at"`
+	Manga      KotatsuManga `json:"manga"`
 }
 
 type KotatsuManga struct {
-	Id         int64         `json:"id"`
-	Title      string        `json:"title"`
-	Url        string        `json:"url"`
-	PublicUrl  string        `json:"public_url"`
-	CoverUrl   string        `json:"cover_url"`
-	LargeCover string        `json:"large_cover_url"`
-	Authors    string        `json:"author"`
-	Source     string        `json:"source"`
-	Tags       []interface{} `json:"tags"`
+	Id            int64         `json:"id"`
+	Title         string        `json:"title"`
+	AltTitle      string        `json:"alt_title"`
+	Url           string        `json:"url"`
+	PublicUrl     string        `json:"public_url"`
+	Rating        float32       `json:"rating"`
+	Nsfw          bool          `json:"nsfw"`
+	ContentRating string        `json:"content_rating"`
+	CoverUrl      string        `json:"cover_url"`
+	LargeCover    string        `json:"large_cover_url"`
+	State         string        `json:"state"`
+	Author        string        `json:"author"`
+	Source        string        `json:"source"`
+	Tags          []interface{} `json:"tags"`
 }
 
 type KotatsuCategory struct {
@@ -32,7 +54,43 @@ type KotatsuCategory struct {
 	Title      string `json:"title"`
 }
 
-// LoadKotatsuZip reads a Kotatsu zip and returns parsed favourites and categories.
+type KotatsuHistory struct {
+	MangaId   int64   `json:"manga_id"`
+	CreatedAt int64   `json:"created_at"`
+	UpdatedAt int64   `json:"updated_at"`
+	ChapterId int64   `json:"chapter_id"`
+	Page      int     `json:"page"`
+	Scroll    float64 `json:"scroll"`
+	Percent   float32 `json:"percent"`
+}
+
+type KotatsuBookmark struct {
+	MangaId   int64   `json:"manga_id"`
+	PageId    int64   `json:"page_id"`
+	ChapterId int64   `json:"chapter_id"`
+	Page      int     `json:"page"`
+	Scroll    float64 `json:"scroll"`
+	ImageUrl  string  `json:"image_url"`
+	CreatedAt int64   `json:"created_at"`
+	Percent   float32 `json:"percent"`
+}
+
+type KotatsuIndexEntry struct {
+	MangaId  int64            `json:"manga_id"`
+	Chapters []KotatsuChapter `json:"chapters"`
+}
+
+type KotatsuChapter struct {
+	Id         int64   `json:"id"`
+	Name       string  `json:"name"`
+	Number     float32 `json:"number"`
+	Url        string  `json:"url"`
+	Scanlator  string  `json:"scanlator"`
+	UploadDate int64   `json:"upload_date"`
+	Branch     string  `json:"branch"`
+}
+
+// LoadKotatsuZip reads a Kotatsu zip and returns parsed backup data.
 func LoadKotatsuZip(path string) (*KotatsuBackup, error) {
 	r, err := zip.OpenReader(path)
 	if err != nil {
@@ -42,36 +100,64 @@ func LoadKotatsuZip(path string) (*KotatsuBackup, error) {
 
 	kb := &KotatsuBackup{}
 	for _, f := range r.File {
+		rc, err := f.Open()
+		if err != nil {
+			return nil, err
+		}
+
 		switch f.Name {
 		case "favourites":
-			rc, err := f.Open()
-			if err != nil {
-				return nil, err
-			}
-			dec := json.NewDecoder(rc)
-			// JSON is an array
-			var arr []KotatsuManga
-			if err := dec.Decode(&arr); err != nil {
+			var arr []KotatsuFavouriteEntry
+			if err := json.NewDecoder(rc).Decode(&arr); err != nil {
 				rc.Close()
-				return nil, err
+				return nil, fmt.Errorf("decode favourites: %w", err)
 			}
-			rc.Close()
 			kb.Favourites = arr
 		case "categories":
-			rc, err := f.Open()
-			if err != nil {
-				return nil, err
-			}
 			var arr []KotatsuCategory
 			if err := json.NewDecoder(rc).Decode(&arr); err != nil {
 				rc.Close()
-				return nil, err
+				return nil, fmt.Errorf("decode categories: %w", err)
 			}
-			rc.Close()
 			kb.Categories = arr
-		default:
-			// skip
+		case "history":
+			var arr []KotatsuHistory
+			if err := json.NewDecoder(rc).Decode(&arr); err != nil {
+				rc.Close()
+				return nil, fmt.Errorf("decode history: %w", err)
+			}
+			kb.History = arr
+		case "bookmarks":
+			var arr []KotatsuBookmark
+			if err := json.NewDecoder(rc).Decode(&arr); err != nil {
+				rc.Close()
+				return nil, fmt.Errorf("decode bookmarks: %w", err)
+			}
+			kb.Bookmarks = arr
+		case "index":
+			var arr []KotatsuIndexEntry
+			if err := json.NewDecoder(rc).Decode(&arr); err != nil {
+				rc.Close()
+				return nil, fmt.Errorf("decode index: %w", err)
+			}
+			kb.Index = arr
+		case "settings", "reader_grid", "sources":
+			// Read raw bytes for passthrough
+			buf, err := io.ReadAll(rc)
+			if err != nil {
+				rc.Close()
+				return nil, fmt.Errorf("read %s: %w", f.Name, err)
+			}
+			switch f.Name {
+			case "settings":
+				kb.RawSettings = buf
+			case "reader_grid":
+				kb.RawReaderGrid = buf
+			case "sources":
+				kb.RawSources = buf
+			}
 		}
+		rc.Close()
 	}
 	return kb, nil
 }

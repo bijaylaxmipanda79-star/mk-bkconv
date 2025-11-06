@@ -1,6 +1,5 @@
 module github.com/galpt/mk-bkconv
 
-go 1.20
+go 1.23
 
-require (
-)
+require google.golang.org/protobuf v1.36.10
