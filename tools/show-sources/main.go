@@ -25,14 +25,15 @@ func main() {
 	fmt.Printf("Total sources: %d\n\n", len(backup.BackupSources))
 
 	for _, src := range backup.BackupSources {
-		fmt.Printf("Source ID: %d (0x%016x)\n", src.SourceId, src.SourceId)
-		fmt.Printf("Name: %s\n\n", src.Name)
+		sid := src.GetSourceId()
+		fmt.Printf("Source ID: %d (0x%016x)\n", sid, uint64(sid))
+		fmt.Printf("Name: %s\n\n", src.GetName())
 	}
 
 	// Show unique sources from manga
 	sourceCounts := make(map[int64]int)
 	for _, m := range backup.BackupManga {
-		sourceCounts[m.Source]++
+		sourceCounts[m.GetSource()]++
 	}
 
 	fmt.Println("=== MANGA BY SOURCE ===")

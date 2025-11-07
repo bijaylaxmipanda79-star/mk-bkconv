@@ -38,6 +38,214 @@ var KnownSourceMapping = map[string]SourceMapping{
 		Notes:          "Approximate - verify after import",
 	},
 	// Add more known mappings here as discovered
+	// Bulk entries inferred from local `mihon-extensions-source-main/lib-multisrc`.
+	// These entries use the library directory name as the Mihon extension name.
+	// The keys are uppercase candidate Kotatsu identifiers; they should be
+	// adjusted if your Kotatsu uses different naming.
+	"MADARA": {
+		MihonName:      "madara",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGABOX": {
+		MihonName:      "mangabox",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGACATALOG": {
+		MihonName:      "mangacatalog",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGADVENTURE": {
+		MihonName:      "mangadventure",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGAESP": {
+		MihonName:      "mangaesp",
+		MihonLang:      "es",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGAHUB": {
+		MihonName:      "mangahub",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGARAW": {
+		MihonName:      "mangaraw",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGAREADER": {
+		MihonName:      "mangareader",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGATHEMESIA": {
+		MihonName:      "mangathemesia",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANGAWORLD": {
+		MihonName:      "mangaworld",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MANHWAZ": {
+		MihonName:      "manhwaz",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MMLOOK": {
+		MihonName:      "mmlook",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MMRCMS": {
+		MihonName:      "mmrcms",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MONOCHROME": {
+		MihonName:      "monochrome",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MULTICHAN": {
+		MihonName:      "multichan",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"PAPRIKA": {
+		MihonName:      "paprika",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"PEACHSCAN": {
+		MihonName:      "peachscan",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"PIZZAREADER": {
+		MihonName:      "pizzareader",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"READERFRONT": {
+		MihonName:      "readerfront",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"SCANR": {
+		MihonName:      "scanr",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"SENKURO": {
+		MihonName:      "senkuro",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"TERRASCAN": {
+		MihonName:      "terrascan",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"VERCOMICS": {
+		MihonName:      "vercomics",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"WPcomics": {
+		MihonName:      "wpcomics",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"YUYU": {
+		MihonName:      "yuyu",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"ZBULU": {
+		MihonName:      "zbulu",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"ZEISTMANGA": {
+		MihonName:      "zeistmanga",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"ZMANGA": {
+		MihonName:      "zmanga",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"COMICIVIEWER": {
+		MihonName:      "comiciviewer",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"FANSUBSCAT": {
+		MihonName:      "fansubscat",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"GIGAVIEWER": {
+		MihonName:      "gigaviewer",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"GMANGA": {
+		MihonName:      "gmanga",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"MADTHEME": {
+		MihonName:      "madtheme",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
+	"LILIANA": {
+		MihonName:      "liliana",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
 }
 
 // SourceMapping represents a known mapping from Kotatsu to Mihon source

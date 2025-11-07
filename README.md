@@ -39,6 +39,9 @@ A Go tool to convert backup files between the Mihon and Kotatsu Android apps.
 
 - Convert Mihon backup (.tachibk — protobuf, optionally gzipped) to Kotatsu ZIP-of-JSON backup.
 - Convert Kotatsu ZIP backup (JSON sections inside) to a minimal Mihon protobuf backup.
+- Converted backups include the Keiyoushi extension repository with proper signing key fingerprint for automatic extension trust.
+- Only includes sources available in both ecosystems to avoid "Source not found" errors.
+- Provides step-by-step instructions for restoring the backup and installing required extensions.
 - Modular code (separate packages for Mihon, Kotatsu, conversion) and a simple CLI.
 
 ## Requirements
@@ -118,8 +121,28 @@ Example (PowerShell):
 .\mk-bkconv.exe kotatsu-to-mihon -in C:\path\to\kotatsu_backup.zip -out C:\tmp\app.mihon_new.tachibk
 ```
 
+### After converting to Mihon
+
+The tool does a few things automatically when converting from Kotatsu:
+
+- Adds the Keiyoushi extension repository with the correct signing key (so extensions auto-trust when installed)
+- Filters out sources that don't exist in both ecosystems (avoids "Source not found" errors)
+- Marks manga as initialized (readable immediately after you install extensions)
+- Prints a summary showing which sources you need and how to get them working
+
+To restore the backup in Mihon:
+
+1. Open Mihon → Settings → Backup and restore → Restore backup
+2. Pick the `.tachibk` file you generated
+3. Mihon will restore your library and add the Keiyoushi repo automatically
+4. Go to Browse → Extensions and search for the sources listed in the conversion output
+5. Install the extensions you need — they'll auto-trust without prompts
+6. Return to Library and verify your manga show up
+
 > [!TIP]
-> If you want deterministic outputs for testing, run the conversions on small sample backups first and inspect the resulting ZIP and JSON contents.
+> 1. The conversion output lists every source in your backup. Extension names usually match source names (e.g., "MangaDex" source → install "MangaDex" extension).
+>
+> 2. If you want deterministic outputs for testing, run the conversions on small sample backups first and inspect the resulting ZIP and JSON contents.
 
 ## Design notes
 

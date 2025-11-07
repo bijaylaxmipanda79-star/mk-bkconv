@@ -47,31 +47,31 @@ func main() {
 
 func analyzeBackupManga(m *pb.BackupManga) {
 	data, _ := json.MarshalIndent(map[string]interface{}{
-		"source":             m.Source,
-		"url":                m.Url,
-		"title":              m.Title,
-		"artist":             m.Artist,
-		"author":             m.Author,
-		"description":        m.Description,
-		"genre_count":        len(m.Genre),
-		"status":             m.Status,
-		"thumbnailUrl":       m.ThumbnailUrl,
-		"dateAdded":          m.DateAdded,
-		"viewer":             m.Viewer,
-		"chapters_count":     len(m.Chapters),
-		"categories_count":   len(m.Categories),
-		"tracking_count":     len(m.Tracking),
-		"favorite":           m.Favorite,
-		"chapterFlags":       m.ChapterFlags,
-		"viewer_flags":       m.ViewerFlags,
-		"history_count":      len(m.History),
-		"updateStrategy":     m.UpdateStrategy,
-		"lastModifiedAt":     m.LastModifiedAt,
-		"favoriteModifiedAt": m.FavoriteModifiedAt,
-		"excludedScanlators": m.ExcludedScanlators,
-		"version":            m.Version,
-		"notes":              m.Notes,
-		"initialized":        m.Initialized,
+		"source":             m.GetSource(),
+		"url":                m.GetUrl(),
+		"title":              m.GetTitle(),
+		"artist":             m.GetArtist(),
+		"author":             m.GetAuthor(),
+		"description":        m.GetDescription(),
+		"genre_count":        len(m.GetGenre()),
+		"status":             m.GetStatus(),
+		"thumbnailUrl":       m.GetThumbnailUrl(),
+		"dateAdded":          m.GetDateAdded(),
+		"viewer":             m.GetViewer(),
+		"chapters_count":     len(m.GetChapters()),
+		"categories_count":   len(m.GetCategories()),
+		"tracking_count":     len(m.GetTracking()),
+		"favorite":           m.GetFavorite(),
+		"chapterFlags":       m.GetChapterFlags(),
+		"viewer_flags":       m.GetViewerFlags(),
+		"history_count":      len(m.GetHistory()),
+		"updateStrategy":     m.GetUpdateStrategy(),
+		"lastModifiedAt":     m.GetLastModifiedAt(),
+		"favoriteModifiedAt": m.GetFavoriteModifiedAt(),
+		"excludedScanlators": m.GetExcludedScanlators(),
+		"version":            m.GetVersion(),
+		"notes":              m.GetNotes(),
+		"initialized":        m.GetInitialized(),
 	}, "", "  ")
 	fmt.Println(string(data))
 }
@@ -82,7 +82,7 @@ func checkForIssues(backup *pb.Backup) {
 	// Check for zero source IDs
 	zeroSources := 0
 	for _, m := range backup.BackupManga {
-		if m.Source == 0 {
+		if m.GetSource() == 0 {
 			zeroSources++
 		}
 	}
@@ -93,7 +93,7 @@ func checkForIssues(backup *pb.Backup) {
 	// Check for uninitialized manga
 	uninitialized := 0
 	for _, m := range backup.BackupManga {
-		if !m.Initialized {
+		if !m.GetInitialized() {
 			uninitialized++
 		}
 	}
@@ -104,7 +104,7 @@ func checkForIssues(backup *pb.Backup) {
 	// Check for missing timestamps
 	noDateAdded := 0
 	for _, m := range backup.BackupManga {
-		if m.DateAdded == 0 {
+		if m.GetDateAdded() == 0 {
 			noDateAdded++
 		}
 	}
@@ -119,8 +119,8 @@ func checkForIssues(backup *pb.Backup) {
 
 	// Check categories without proper IDs
 	for i, cat := range backup.BackupCategories {
-		if cat.Id == 0 {
-			issues = append(issues, fmt.Sprintf("⚠️  Category #%d '%s' has id = 0", i, cat.Name))
+		if cat.GetId() == 0 {
+			issues = append(issues, fmt.Sprintf("⚠️  Category #%d '%s' has id = 0", i, cat.GetName()))
 		}
 	}
 
