@@ -246,6 +246,12 @@ var KnownSourceMapping = map[string]SourceMapping{
 		MihonVersionID: 1,
 		Notes:          "",
 	},
+	"HENTAIFOX": {
+		MihonName:      "HentaiFox",
+		MihonLang:      "all",
+		MihonVersionID: 1,
+		Notes:          "",
+	},
 }
 
 // SourceMapping represents a known mapping from Kotatsu to Mihon source
