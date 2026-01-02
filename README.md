@@ -121,6 +121,9 @@ Example (PowerShell):
 .\mk-bkconv.exe kotatsu-to-mihon -in C:\path\to\kotatsu_backup.zip -out C:\tmp\app.mihon_new.tachibk
 ```
 
+> [!TIP]
+> `--allow-fallback` — when running `kotatsu-to-mihon`, include this flag to allow falling back to deterministic hashing for source mapping when a mapping is missing. The flag may appear before or after the subcommand.
+
 ### After converting to Mihon
 
 The tool does a few things automatically when converting from Kotatsu:

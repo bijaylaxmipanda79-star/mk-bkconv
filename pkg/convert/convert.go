@@ -1,10 +1,10 @@
 package convert
 
 import (
+	"errors"
 	"fmt"
 	"hash/fnv"
 	"strings"
-	"errors"
 
 	"github.com/galpt/mk-bkconv/pkg/kotatsu"
 	pb "github.com/galpt/mk-bkconv/proto/mihon"
@@ -135,7 +135,9 @@ func KotatsuToMihon(kb *kotatsu.KotatsuBackup, allowSourceFallback bool) (*pb.Ba
 
 		// Generate or retrieve source ID
 		sourceID, err := generateSourceID(km.Source, allowSourceFallback)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 		if _, exists := sourceMap[km.Source]; !exists {
 			sourceMap[km.Source] = sourceID
 			// Try to get the Mihon source name, fall back to Kotatsu name
